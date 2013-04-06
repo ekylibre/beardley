@@ -38,10 +38,6 @@ module Beardley
     classpath << File::PATH_SEPARATOR + File.expand_path(jar)
   end
 
-  Dir["lib/*.jar"].each do |jar|
-    classpath << File::PATH_SEPARATOR + File.expand_path(jar)
-  end
-
   Rjb::load( classpath, ['-Djava.awt.headless=true','-Xms128M', '-Xmx256M'] )
 
   Locale                      = Rjb::import('java.util.Locale')

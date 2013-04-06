@@ -21,7 +21,20 @@ class TestPrint < Test::Unit::TestCase
     assert_equal Pathname, report.object_file.class
     report.to_pdf
     report.to_odt
-    report.to_docx                                  
+    report.to_docx
+  end
+
+  def test_print_of_empty_report_with_datasource
+    empty = Pathname.new(__FILE__).dirname.join("fixtures", "empty.jrxml")
+    assert empty.exist?
+    report = Beardley::Report.new(empty)
+    assert_equal Pathname, report.source_file.class
+    assert_equal Pathname, report.object_file.class
+    datasource = '<?xml version="1.0" encoding="UTF-8"?>
+<things><thing name="First">1</thing><thing name="Second">2</thing></things>'
+    report.to_pdf(datasource)
+    report.to_odt(datasource)
+    report.to_docx(datasource)
   end
 
   def test_print_of_barcode_report
@@ -34,5 +47,7 @@ class TestPrint < Test::Unit::TestCase
     report.to_odt
     report.to_docx                                  
   end
+
+  # TODO Test parameters
 
 end

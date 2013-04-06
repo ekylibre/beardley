@@ -94,9 +94,6 @@ module Beardley
       if @source_file && ((!@object_file.exist? && @source_file.exist?) || (@source_file.exist? && @source_file.mtime > @object_file.mtime))
         JasperCompileManager.compileReportToFile(@source_file.to_s, @object_file.to_s)
       end
-      unless @object_file.exist?
-        raise StandardError.new("Object file (#{@object_file}) does not exist!")
-      end
       load_datasource(datasource)
     end
 
