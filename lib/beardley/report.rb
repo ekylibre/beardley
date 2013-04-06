@@ -54,25 +54,22 @@ module Beardley
 
     # Export report to ODT with given datasource
     def to_odt(*args)
-      options = extract_options!(args)
-      datasource = args[0]
-      file = Tempfile.new("#{__method__}")
-      exporter = JROdtExporter.new
-      exporter.setParameter(JRExporterParameter.JASPER_PRINT, prepare(datasource))
-      exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, file.path.to_s)
-      exporter.exportReport
-      file.rewind
-      report = file.read
-      file.close(true)
-      return report
+      return to(:odt, *args)
     end
 
     # Export report to DOCX with given datasource
     def to_docx(*args)
+      return to(:docx, *args)
+    end
+
+    private
+
+    # Generic method to export to some format like ODT and DOCX
+    def to(format, *args)
       options = extract_options!(args)
       datasource = args[0]
-      file = Tempfile.new("#{__method__}")
-      exporter = JRDocxExporter.new
+      file = Tempfile.new("to_#{format}")
+      exporter = Beardley.const_get("JR#{format.to_s.capitalize}Exporter").new
       exporter.setParameter(JRExporterParameter.JASPER_PRINT, prepare(datasource))
       exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, file.path.to_s)
       exporter.exportReport
@@ -82,8 +79,7 @@ module Beardley
       return report
     end
 
-    private
-
+    # Extract options from a list of arguments
     def extract_options!(args)
       return (args[-1].is_a?(Hash) ? args.delete_at(-1) : {})
     end
