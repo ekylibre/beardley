@@ -22,6 +22,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require "beardley/version"
+require "beardley-groovy"
 require "pathname"
 require "digest"
 require "rjb"
@@ -33,7 +34,7 @@ module Beardley
     attr_accessor :config
   end
 
-  classpath = '.'
+  classpath = '.' + File::PATH_SEPARATOR + Beardley::Groovy.classpath.to_s
   Dir["#{File.dirname(__FILE__)}/../vendor/java/*.jar"].each do |jar|
     classpath << File::PATH_SEPARATOR + File.expand_path(jar)
   end

@@ -1,12 +1,14 @@
 PATH
   remote: .
   specs:
-    beardley (0.1.1)
+    beardley (0.1.2)
+      beardley-groovy (>= 1.7.5)
       rjb (= 1.4.6)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    beardley-groovy (1.7.5.0)
     colorize (0.5.8)
     coveralls (0.6.4)
       colorize

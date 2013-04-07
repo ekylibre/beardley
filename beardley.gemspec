@@ -17,6 +17,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency('rjb', '1.4.6')
+  s.add_dependency('beardley-groovy', '>= 1.7.5')
   s.add_development_dependency('rake', '>= 10')
   s.add_development_dependency('coveralls', '>= 0.6')
   s.add_development_dependency('bundler', '> 1')
