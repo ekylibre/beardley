@@ -57,9 +57,19 @@ module Beardley
       return to(:odt, *args)
     end
 
+    # Export report to ODS with given datasource
+    def to_ods(*args)
+      return to(:ods, *args)
+    end
+
     # Export report to DOCX with given datasource
     def to_docx(*args)
       return to(:docx, *args)
+    end
+
+    # Export report to XLSX with given datasource
+    def to_xlsx(*args)
+      return to(:xlsx, *args)
     end
 
     private

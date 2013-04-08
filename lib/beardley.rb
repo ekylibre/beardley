@@ -49,7 +49,9 @@ module Beardley
   JRXPathQueryExecuterFactory = Rjb::import('net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory')
   JREmptyDataSource           = Rjb::import('net.sf.jasperreports.engine.JREmptyDataSource')
   JROdtExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdtExporter')
+  JROdsExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdsExporter')
   JRDocxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRDocxExporter')
+  JRXlsxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter')
 
   JasperCompileManager        = Rjb::import('net.sf.jasperreports.engine.JasperCompileManager')
   JasperExportManager         = Rjb::import('net.sf.jasperreports.engine.JasperExportManager')
