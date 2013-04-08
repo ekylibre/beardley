@@ -22,7 +22,9 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require "beardley/version"
-require "beardley-groovy"
+require "beardley/core"
+require "beardley/groovy"
+require "beardley/barcode"
 require "pathname"
 require "digest"
 require "rjb"
@@ -34,12 +36,7 @@ module Beardley
     attr_accessor :config
   end
 
-  classpath = '.' + File::PATH_SEPARATOR + Beardley::Groovy.classpath.to_s
-  Dir["#{File.dirname(__FILE__)}/../vendor/java/*.jar"].each do |jar|
-    classpath << File::PATH_SEPARATOR + File.expand_path(jar)
-  end
-
-  Rjb::load( classpath, ['-Djava.awt.headless=true','-Xms128M', '-Xmx256M'] )
+  Rjb::load((["."] + Beardley::Core.classpath + Beardley::Groovy.classpath + Beardley::Barcode.classpath).join(File::PATH_SEPARATOR), ['-Djava.awt.headless=true','-Xms128M', '-Xmx256M'])
 
   Locale                      = Rjb::import('java.util.Locale')
 

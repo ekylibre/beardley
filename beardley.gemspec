@@ -2,23 +2,25 @@
 $:.push File.expand_path("../lib", __FILE__)
 require "beardley/version"
 
-Gem::Specification.new do |s|
-  s.name        = "beardley"
-  s.version     = Beardley::VERSION::STRING
-  s.authors     = ["Brice Texier"]
-  s.summary     = %q{JasperReports integration}
-  s.description = %q{Generate reports using JasperReports reporting tool}
-  s.email       = "burisu@oneiros.fr"
-  s.homepage    = "https://github.com/burisu/beardley"
+Gem::Specification.new do |spec|
+  spec.name        = "beardley"
+  spec.version     = Beardley::VERSION::STRING
+  spec.authors     = ["Brice Texier"]
+  spec.summary     = %q{JasperReports integration}
+  spec.description = %q{Generate reports using JasperReports reporting tool}
+  spec.email       = "burisu@oneiros.fr"
+  spec.homepage    = "https://github.com/burisu/beardley"
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
-  s.require_paths = ["lib"]
+  spec.files         = `git ls-files`.split("\n")
+  spec.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
+  spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  spec.require_paths = ["lib"]
 
-  s.add_dependency('rjb', '1.4.6')
-  s.add_dependency('beardley-groovy', '>= 1.7.5')
-  s.add_development_dependency('rake', '>= 10')
-  s.add_development_dependency('coveralls', '>= 0.6')
-  s.add_development_dependency('bundler', '> 1')
+  spec.add_dependency('rjb', '1.4.6')
+  spec.add_dependency('beardley-core', '>= 5.0.0')
+  spec.add_dependency('beardley-groovy', '>= 1.7.5')
+  spec.add_dependency('beardley-barcode', '>= 0.0.1')
+  spec.add_development_dependency('rake', '>= 10')
+  spec.add_development_dependency('coveralls', '>= 0.6')
+  spec.add_development_dependency('bundler', '> 1')
 end
