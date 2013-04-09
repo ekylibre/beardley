@@ -34,6 +34,15 @@ module Beardley
 
   class << self
     attr_accessor :config
+
+    # Changes the level of verbosity
+    def with_warnings(flag = nil)
+      old_verbose, $VERBOSE = $VERBOSE, flag
+      yield
+    ensure
+      $VERBOSE = old_verbose
+    end
+    
   end
 
   Rjb::load((["."] + Beardley::Core.classpath + Beardley::Groovy.classpath + Beardley::Barcode.classpath).join(File::PATH_SEPARATOR), ['-Djava.awt.headless=true','-Xms128M', '-Xmx256M'])
@@ -43,7 +52,7 @@ module Beardley
   JRException                 = Rjb::import('net.sf.jasperreports.engine.JRException')
   JRExporterParameter         = Rjb::import('net.sf.jasperreports.engine.JRExporterParameter')
   JRXmlUtils                  = Rjb::import('net.sf.jasperreports.engine.util.JRXmlUtils')
-  JRXPathQueryExecuterFactory = Rjb::import('net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory')
+  JRXPathQueryExecuterFactory = with_warnings { Rjb::import('net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory') }
   JREmptyDataSource           = Rjb::import('net.sf.jasperreports.engine.JREmptyDataSource')
   JROdtExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdtExporter')
   JROdsExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdsExporter')

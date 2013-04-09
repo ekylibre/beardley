@@ -124,7 +124,7 @@ module Beardley
       if datasource
         input_source = InputSource.new
         input_source.setCharacterStream(StringReader.new(datasource.to_s))
-        data_document = JRXmlUtils._invoke('parse', 'Lorg.xml.sax.InputSource;', input_source)
+        data_document = Beardley.with_warnings { JRXmlUtils._invoke('parse', 'Lorg.xml.sax.InputSource;', input_source) }
         
         jasper_params.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, data_document)
         jasper_print = JasperFillManager.fillReport(@object_file.to_s, jasper_params)
