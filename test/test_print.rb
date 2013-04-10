@@ -11,6 +11,7 @@ class TestPrint < Test::Unit::TestCase
     report.to_pdf
     report.to_odt
     report.to_ods
+    report.to_csv
     report.to_docx
     report.to_xlsx
   end
@@ -24,6 +25,7 @@ class TestPrint < Test::Unit::TestCase
     report.to_pdf
     report.to_odt
     report.to_ods
+    report.to_csv
     report.to_docx
     report.to_xlsx
   end
@@ -39,6 +41,7 @@ class TestPrint < Test::Unit::TestCase
     report.to_pdf(datasource)
     report.to_odt(datasource)
     report.to_ods(datasource)
+    report.to_csv(datasource)
     report.to_docx(datasource)
     report.to_xlsx(datasource)
   end
@@ -52,6 +55,7 @@ class TestPrint < Test::Unit::TestCase
     report.to_pdf
     report.to_odt
     report.to_ods
+    report.to_csv
     report.to_docx
     report.to_xlsx
   end

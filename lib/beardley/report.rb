@@ -62,6 +62,11 @@ module Beardley
       return to(:ods, *args)
     end
 
+    # Export report to CSV with given datasource
+    def to_csv(*args)
+      return to(:csv, *args)
+    end
+
     # Export report to DOCX with given datasource
     def to_docx(*args)
       return to(:docx, *args)

@@ -56,6 +56,7 @@ module Beardley
   JREmptyDataSource           = Rjb::import('net.sf.jasperreports.engine.JREmptyDataSource')
   JROdtExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdtExporter')
   JROdsExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdsExporter')
+  JRCsvExporter               = Rjb::import('net.sf.jasperreports.engine.export.JRCsvExporter')
   JRDocxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRDocxExporter')
   JRXlsxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter')
 
