@@ -32,7 +32,7 @@ module Beardley
       @parameters = options.delete(:report) || {}
       @source_file, @object_file = nil, nil
       if report.is_a?(Pathname)
-        @source_file = report if report.extname.downcase == ".jrxml"
+        @source_file = report if report.extname.downcase == ".jrxml" or report.extname.downcase == ".xml"
         @object_file = report if report.extname.downcase == ".jasper"
       elsif report.is_a?(String)
         hash = Digest::SHA256.hexdigest(report)
@@ -76,6 +76,9 @@ module Beardley
     def to_xlsx(*args)
       return to(:xlsx, *args)
     end
+
+    # XLS and RTF are not suitable anymore
+    # NOTE: JasperReports can not produce DOC files
 
     private
 

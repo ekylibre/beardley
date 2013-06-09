@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    beardley (0.4.0)
+    beardley (0.4.1)
       beardley-barcode (>= 0.0.1)
       beardley-core (>= 5.0.0)
       beardley-groovy (>= 1.7.5)
@@ -21,7 +21,7 @@ GEM
       simplecov (>= 0.7)
       thor
     mime-types (1.23)
-    multi_json (1.7.2)
+    multi_json (1.7.6)
     rake (10.0.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
