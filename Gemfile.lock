@@ -6,7 +6,7 @@ PATH
       beardley-batik (>= 0.0.0)
       beardley-core (>= 5.0.0)
       beardley-groovy (>= 1.7.5)
-      rjb (= 1.4.6)
+      rjb (>= 1.4.6)
 
 GEM
   remote: https://rubygems.org/
@@ -27,7 +27,7 @@ GEM
     rake (10.1.0)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    rjb (1.4.6)
+    rjb (1.4.8)
     simplecov (0.7.1)
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
