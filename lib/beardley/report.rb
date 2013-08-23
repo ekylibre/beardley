@@ -111,36 +111,53 @@ module Beardley
       load_datasource(datasource)
     end
 
-    # Load parsed XML datasource with java component
-    def load_datasource(datasource = nil)
+
+    # Build the default parameters Hash for printing
+    def prepare_params
       # Converting default report params to java HashMap
-      jasper_params = HashMap.new
+      params = HashMap.new
       Beardley.config[:report_params].each do |k,v|
-        jasper_params.put(k, v)
+        params.put(k, v)
       end
       
       # Convert the ruby parameters' hash to a java HashMap, but keeps it as
       # default when they already represent a JRB entity.
       # Pay attention that, for now, all other parameters are converted to string!
       @parameters.each do |key, value|
-        jasper_params.put(JavaString.new(key.to_s), parameter_value_of(value))
+        params.put(JavaString.new(key.to_s), parameter_value_of(value))
       end
+      
+      return params
+    end
 
-      jasper_print = nil
+    # Load parseable XML datasource with java component
+    def load_datasource(datasource = nil)
+      jasper_params = prepare_params
 
-      # Fill the report
+      # Parse and load XML as datasource 
       if datasource
         input_source = InputSource.new
         input_source.setCharacterStream(StringReader.new(datasource.to_s))
-        data_document = Beardley.with_warnings { JRXmlUtils._invoke('parse', 'Lorg.xml.sax.InputSource;', input_source) }
-        
+        data_document = Beardley.with_warnings do
+          JRXmlUtils._invoke('parse', 'Lorg.xml.sax.InputSource;', input_source)
+        end
         jasper_params.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, data_document)
-        jasper_print = JasperFillManager.fillReport(@object_file.to_s, jasper_params)
-      else
-        jasper_print = JasperFillManager.fillReport(@object_file.to_s, jasper_params, JREmptyDataSource.new)
       end
-      return jasper_print
+
+      # Build JasperPrint
+      return fill_report(jasper_params, datasource)
     end
+
+
+    # Fill the report with valid method depending on datasource
+    def fill_report(params, datasource = nil)
+      if datasource
+        return JasperFillManager.fillReport(@object_file.to_s, params)
+      else
+        return JasperFillManager.fillReport(@object_file.to_s, params, JREmptyDataSource.new)
+      end
+    end
+    
 
     # Returns the value without conversion when it's converted to Java Types.
     # When isn't a Rjb class, returns a Java String of it.
