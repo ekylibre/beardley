@@ -3,6 +3,7 @@ PATH
   specs:
     beardley (0.4.1)
       beardley-barcode (>= 0.0.1)
+      beardley-batik (>= 0.0.0)
       beardley-core (>= 5.0.0)
       beardley-groovy (>= 1.7.5)
       rjb (= 1.4.6)
@@ -11,7 +12,8 @@ GEM
   remote: https://rubygems.org/
   specs:
     beardley-barcode (0.0.1)
-    beardley-core (5.0.4.0)
+    beardley-batik (0.0.0)
+    beardley-core (5.2.0.0)
     beardley-groovy (1.7.5.1)
     colorize (0.5.8)
     coveralls (0.6.7)
