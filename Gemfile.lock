@@ -1,12 +1,12 @@
 PATH
   remote: .
   specs:
-    beardley (0.5.0)
+    beardley (0.6.1)
       beardley-barcode (>= 0.0.1)
       beardley-batik (>= 0.0.0)
       beardley-core (>= 5.0.0)
       beardley-groovy (>= 1.7.5)
-      rjb (>= 1.4.6)
+      rjb (>= 1.4.8)
 
 GEM
   remote: https://rubygems.org/
