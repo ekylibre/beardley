@@ -16,7 +16,8 @@ Gem::Specification.new do |spec|
   spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency('rjb', '>= 1.4.6')
+  spec.add_dependency('rjb', '>= 1.4.8')
+  # spec.add_dependency('rjb-loader', '>= 0.0.2')
   spec.add_dependency('beardley-core', '>= 5.0.0')
   spec.add_dependency('beardley-groovy', '>= 1.7.5')
   spec.add_dependency('beardley-barcode', '>= 0.0.1')
