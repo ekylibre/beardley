@@ -26,6 +26,7 @@ require "beardley/core"
 require "beardley/groovy"
 require "beardley/barcode"
 require "beardley/batik"
+require "beardley/xml"
 require "pathname"
 require "digest"
 require "rjb"
@@ -46,7 +47,13 @@ module Beardley
     
   end
 
-  Rjb::load((["."] + Beardley::Core.classpath + Beardley::Groovy.classpath + Beardley::Barcode.classpath + Beardley::Batik.classpath).join(File::PATH_SEPARATOR), ['-Djava.awt.headless=true','-Xms128M', '-Xmx256M'])
+  Rjb::load((["."] +
+             Beardley::Core.classpath +
+             Beardley::Groovy.classpath +
+             Beardley::Barcode.classpath +
+             Beardley::XML.classpath +
+             Beardley::Batik.classpath).join(File::PATH_SEPARATOR),
+            ['-Djava.awt.headless=true', '-Xms128M', '-Xmx256M'])
 
   Locale                      = Rjb::import('java.util.Locale')
 
