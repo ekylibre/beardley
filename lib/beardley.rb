@@ -22,20 +22,21 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require "beardley/version"
-require "beardley/core"
-require "beardley/groovy"
-require "beardley/barcode"
-require "beardley/batik"
-require "beardley/xml"
+# require "beardley/core"
+# require "beardley/groovy"
+# require "beardley/barcode"
+# require "beardley/batik"
+# require "beardley/xml"
 require "pathname"
 require "digest"
 require "rjb"
+require "rjb-loader"
 
 
 module Beardley
 
   class << self
-    attr_accessor :config
+    attr_accessor :config, :exporters
 
     # Changes the level of verbosity
     def with_warnings(flag = nil)
@@ -47,48 +48,66 @@ module Beardley
     
   end
 
-  Rjb::load((["."] +
-             Beardley::Core.classpath +
-             Beardley::Groovy.classpath +
-             Beardley::Barcode.classpath +
-             Beardley::XML.classpath +
-             Beardley::Batik.classpath).join(File::PATH_SEPARATOR),
-            ['-Djava.awt.headless=true', '-Xms128M', '-Xmx256M'])
-
-  Locale                      = Rjb::import('java.util.Locale')
-
-  JRException                 = Rjb::import('net.sf.jasperreports.engine.JRException')
-  JRExporterParameter         = Rjb::import('net.sf.jasperreports.engine.JRExporterParameter')
-  JRXmlUtils                  = Rjb::import('net.sf.jasperreports.engine.util.JRXmlUtils')
-  JRXPathQueryExecuterFactory = with_warnings { Rjb::import('net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory') }
-  JREmptyDataSource           = Rjb::import('net.sf.jasperreports.engine.JREmptyDataSource')
-  JROdtExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdtExporter')
-  JROdsExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdsExporter')
-  JRCsvExporter               = Rjb::import('net.sf.jasperreports.engine.export.JRCsvExporter')
-  JRDocxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRDocxExporter')
-  JRXlsxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter')
-
-  JasperCompileManager        = Rjb::import('net.sf.jasperreports.engine.JasperCompileManager')
-  JasperExportManager         = Rjb::import('net.sf.jasperreports.engine.JasperExportManager')
-  JasperFillManager           = Rjb::import('net.sf.jasperreports.engine.JasperFillManager')
-  JasperPrint                 = Rjb::import('net.sf.jasperreports.engine.JasperPrint')
-
-  InputSource                 = Rjb::import('org.xml.sax.InputSource')
-  StringReader                = Rjb::import('java.io.StringReader')
-  HashMap                     = Rjb::import('java.util.HashMap')
-  ByteArrayInputStream        = Rjb::import('java.io.ByteArrayInputStream')
-  JavaString                  = Rjb::import('java.lang.String')
-  JFreeChart                  = Rjb::import('org.jfree.chart.JFreeChart')
-  JavaStringBuffer            = Rjb::import('java.lang.StringBuffer')
-
   # Default report params
   self.config = {
-    :report_params => {
-      "REPORT_LOCALE"    => Locale.new('en', 'US'),
-      "XML_LOCALE"       => Locale.new('en', 'US'),
-      "XML_DATE_PATTERN" => 'yyyy-MM-dd'
-    }
+    report_params: {} 
   }
+  self.exporters = {
+    odt: 'net.sf.jasperreports.engine.export.oasis.JROdtExporter',
+    ods: 'net.sf.jasperreports.engine.export.oasis.JROdsExporter',
+    csv: 'net.sf.jasperreports.engine.export.JRCsvExporter',
+    docx: 'net.sf.jasperreports.engine.export.ooxml.JRDocxExporter',
+    xlsx: 'net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter'
+  }
+  
+  RjbLoader.before_load do |config|
+    Dir[Pathname.new(__FILE__).dirname.join("..", "vendor", "java", "*.jar")].each do |path|
+      config.classpath << File::PATH_SEPARATOR + File.expand_path(path)
+    end
+  end
+
+  RjbLoader.after_load do |config|
+    _Locale = Rjb::import('java.util.Locale')
+    Beardley.config[:report_params]["REPORT_LOCALE"]    = _Locale.new('en', 'US')
+    Beardley.config[:report_params]["XML_LOCALE"]       = _Locale.new('en', 'US')
+    Beardley.config[:report_params]["XML_DATE_PATTERN"] = 'yyyy-MM-dd'
+  end
 
   autoload :Report, 'beardley/report'
+
+  # Rjb::load((["."] +
+  #            Beardley::Core.classpath +
+  #            Beardley::Groovy.classpath +
+  #            Beardley::Barcode.classpath +
+  #            Beardley::XML.classpath +
+  #            Beardley::Batik.classpath).join(File::PATH_SEPARATOR),
+  #           ['-Djava.awt.headless=true', '-Xms128M', '-Xmx256M'])
+
+  # Locale                      = Rjb::import('java.util.Locale')
+
+  # JRException                 = Rjb::import('net.sf.jasperreports.engine.JRException')
+  # JRExporterParameter         = Rjb::import('net.sf.jasperreports.engine.JRExporterParameter')
+  # JRXmlUtils                  = Rjb::import('net.sf.jasperreports.engine.util.JRXmlUtils')
+  # JRXPathQueryExecuterFactory = with_warnings { Rjb::import('net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory') }
+  # JREmptyDataSource           = Rjb::import('net.sf.jasperreports.engine.JREmptyDataSource')
+  # JROdtExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdtExporter')
+  # JROdsExporter               = Rjb::import('net.sf.jasperreports.engine.export.oasis.JROdsExporter')
+  # JRCsvExporter               = Rjb::import('net.sf.jasperreports.engine.export.JRCsvExporter')
+  # JRDocxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRDocxExporter')
+  # JRXlsxExporter              = Rjb::import('net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter')
+
+  # JasperCompileManager        = Rjb::import('net.sf.jasperreports.engine.JasperCompileManager')
+  # JasperExportManager         = Rjb::import('net.sf.jasperreports.engine.JasperExportManager')
+  # JasperFillManager           = Rjb::import('net.sf.jasperreports.engine.JasperFillManager')
+  # JasperPrint                 = Rjb::import('net.sf.jasperreports.engine.JasperPrint')
+
+  # InputSource                 = Rjb::import('org.xml.sax.InputSource')
+  # StringReader                = Rjb::import('java.io.StringReader')
+  # HashMap                     = Rjb::import('java.util.HashMap')
+  # ByteArrayInputStream        = Rjb::import('java.io.ByteArrayInputStream')
+  # JavaString                  = Rjb::import('java.lang.String')
+  # JFreeChart                  = Rjb::import('org.jfree.chart.JFreeChart')
+  # JavaStringBuffer            = Rjb::import('java.lang.StringBuffer')
+
+
 end

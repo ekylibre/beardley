@@ -42,14 +42,18 @@ module Beardley
         end
       end
       @object_file ||= @source_file.dirname.join(@source_file.basename.to_s + ".jasper")
-      raise ArgumentError.new("An object must be given at least") unless @object_file.is_a?(Pathname)
+      unless @object_file.is_a?(Pathname)
+        raise ArgumentError, "An object must be given at least"
+      end
     end
 
     # Export report to PDF with given datasource
     def to_pdf(*args)
       options = extract_options!(args)
       datasource = args[0]
-      return JasperExportManager._invoke('exportReportToPdf', 'Lnet.sf.jasperreports.engine.JasperPrint;', prepare(datasource))
+      _JasperPrint                 = Rjb::import('net.sf.jasperreports.engine.JasperPrint')
+      _JasperExportManager         = Rjb::import('net.sf.jasperreports.engine.JasperExportManager')
+      return _JasperExportManager._invoke('exportReportToPdf', 'Lnet.sf.jasperreports.engine.JasperPrint;', prepare(datasource))
     end
 
     # Export report to ODT with given datasource
@@ -87,9 +91,10 @@ module Beardley
       options = extract_options!(args)
       datasource = args[0]
       file = Tempfile.new("to_#{format}")
-      exporter = Beardley.const_get("JR#{format.to_s.capitalize}Exporter").new
-      exporter.setParameter(JRExporterParameter.JASPER_PRINT, prepare(datasource))
-      exporter.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, file.path.to_s)
+      exporter = Beardley.with_warnings { Rjb::import(Beardley.exporters[format]) }.new
+      _JRExporterParameter = Rjb::import('net.sf.jasperreports.engine.JRExporterParameter')
+      exporter.setParameter(_JRExporterParameter.JASPER_PRINT, prepare(datasource))
+      exporter.setParameter(_JRExporterParameter.OUTPUT_FILE_NAME, file.path.to_s)
       exporter.exportReport
       file.rewind
       report = file.read
@@ -106,7 +111,8 @@ module Beardley
     def prepare(datasource = nil)
       # Compile it, if needed
       if @source_file && ((!@object_file.exist? && @source_file.exist?) || (@source_file.exist? && @source_file.mtime > @object_file.mtime))
-        JasperCompileManager.compileReportToFile(@source_file.to_s, @object_file.to_s)
+        _JasperCompileManager = Rjb::import('net.sf.jasperreports.engine.JasperCompileManager')
+        _JasperCompileManager.compileReportToFile(@source_file.to_s, @object_file.to_s)
       end
       load_datasource(datasource)
     end
@@ -114,8 +120,11 @@ module Beardley
 
     # Build the default parameters Hash for printing
     def prepare_params
+      _HashMap    = Rjb::import('java.util.HashMap')
+      _JavaString = Rjb::import('java.lang.String')
+
       # Converting default report params to java HashMap
-      params = HashMap.new
+      params = _HashMap.new
       Beardley.config[:report_params].each do |k,v|
         params.put(k, v)
       end
@@ -124,7 +133,7 @@ module Beardley
       # default when they already represent a JRB entity.
       # Pay attention that, for now, all other parameters are converted to string!
       @parameters.each do |key, value|
-        params.put(JavaString.new(key.to_s), parameter_value_of(value))
+        params.put(_JavaString.new(key.to_s), parameter_value_of(value))
       end
       
       return params
@@ -136,12 +145,16 @@ module Beardley
 
       # Parse and load XML as datasource 
       if datasource
-        input_source = InputSource.new
-        input_source.setCharacterStream(StringReader.new(datasource.to_s))
+        _InputSource                 = Rjb::import('org.xml.sax.InputSource')
+        _StringReader                = Rjb::import('java.io.StringReader')
+        _JRXmlUtils                  = Rjb::import('net.sf.jasperreports.engine.util.JRXmlUtils')
+        _JRXPathQueryExecuterFactory = Beardley.with_warnings { Rjb::import('net.sf.jasperreports.engine.query.JRXPathQueryExecuterFactory') }
+        input_source = _InputSource.new
+        input_source.setCharacterStream(_StringReader.new(datasource.to_s))
         data_document = Beardley.with_warnings do
-          JRXmlUtils._invoke('parse', 'Lorg.xml.sax.InputSource;', input_source)
+          _JRXmlUtils._invoke('parse', 'Lorg.xml.sax.InputSource;', input_source)
         end
-        jasper_params.put(JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, data_document)
+        jasper_params.put(_JRXPathQueryExecuterFactory.PARAMETER_XML_DATA_DOCUMENT, data_document)
       end
 
       # Build JasperPrint
@@ -151,10 +164,12 @@ module Beardley
 
     # Fill the report with valid method depending on datasource
     def fill_report(params, datasource = nil)
+      _JasperFillManager           = Rjb::import('net.sf.jasperreports.engine.JasperFillManager')
       if datasource
-        return JasperFillManager.fillReport(@object_file.to_s, params)
+        return _JasperFillManager.fillReport(@object_file.to_s, params)
       else
-        return JasperFillManager.fillReport(@object_file.to_s, params, JREmptyDataSource.new)
+        _JREmptyDataSource           = Rjb::import('net.sf.jasperreports.engine.JREmptyDataSource')
+        return _JasperFillManager.fillReport(@object_file.to_s, params, _JREmptyDataSource.new)
       end
     end
     
@@ -167,7 +182,7 @@ module Beardley
       if param.class.parent == Rjb
         param
       else
-        JavaString.new(param.to_s)
+        Rjb::import('java.lang.String').new(param.to_s)
       end
     end
 
