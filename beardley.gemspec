@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email       = "burisu@oneiros.fr"
   spec.homepage    = "https://github.com/burisu/beardley"
 
-  spec.files         = `git ls-files`.split("\n")
+  spec.files         = `git ls-files LICENSE README.rdoc lib vendor`.split("\n")
   spec.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   spec.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   spec.require_paths = ["lib"]

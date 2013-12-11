@@ -109,5 +109,4 @@ module Beardley
   # JFreeChart                  = Rjb::import('org.jfree.chart.JFreeChart')
   # JavaStringBuffer            = Rjb::import('java.lang.StringBuffer')
 
-
 end
