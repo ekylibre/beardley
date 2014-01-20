@@ -70,7 +70,8 @@ module Beardley
     _Locale = Rjb::import('java.util.Locale')
     Beardley.config[:report_params]["REPORT_LOCALE"]    = _Locale.new('en', 'US')
     Beardley.config[:report_params]["XML_LOCALE"]       = _Locale.new('en', 'US')
-    Beardley.config[:report_params]["XML_DATE_PATTERN"] = 'yyyy-MM-dd'
+    Beardley.config[:report_params]["XML_DATE_PATTERN"] = 'yyyy-MM-dd HH:mm:ss Z'
+    Beardley.config[:report_params]["XML_NUMBER_PATTERN"] = '###0.00'
   end
 
   autoload :Report, 'beardley/report'
