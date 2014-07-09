@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.summary     = %q{JasperReports integration}
   spec.description = %q{Generate reports using JasperReports reporting tool}
   spec.email       = "burisu@oneiros.fr"
-  spec.homepage    = "https://github.com/burisu/beardley"
+  spec.homepage    = "https://github.com/ekylibre/beardley"
 
   spec.files         = `git ls-files LICENSE README.rdoc lib vendor`.split("\n")
   spec.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
