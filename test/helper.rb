@@ -2,7 +2,7 @@ require 'coveralls'
 Coveralls.wear!
 
 require 'bundler/setup'
-require 'test/unit'
+require 'minitest/autorun'
 
 # Load JAVA env variables
 begin

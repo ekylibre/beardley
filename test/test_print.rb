@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'helper'
 
-class TestPrint < Test::Unit::TestCase
+class TestPrint < Minitest::Test
 
   def test_print_of_a_xml_string
     report = Beardley::Report.new('<?xml version="1.0" encoding="UTF-8"?>

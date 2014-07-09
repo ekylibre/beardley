@@ -114,4 +114,5 @@ DEPENDENCIES
   beardley!
   bundler (> 1)
   coveralls (>= 0.6)
+  minitest
   rake (>= 10)
