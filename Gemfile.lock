@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    beardley (1.0.2)
+    beardley (1.1.1)
       rjb (>= 1.4.8)
       rjb-loader (>= 0.0.2)
 
