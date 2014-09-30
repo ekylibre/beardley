@@ -1,4 +1,5 @@
 *~
-coverage
-pkg
-test/fixtures/*.jasper
+/coverage
+/pkg
+/test/fixtures/*.jasper
+/tmp

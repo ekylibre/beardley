@@ -81,6 +81,28 @@ module Beardley
       return to(:xlsx, *args)
     end
 
+    # Generic method to export to some format like ODT and DOCX as file in the given place
+    def to_file(format, *args)
+      options = extract_options!(args)
+      datasource = args[0]
+      path = options[:path] || File.join(Dir.tmpdir, "beardley_#{Time.now.to_i.to_s(36)}_#{rand(100_000_000_000).to_s(36)}.#{format}")
+      if format == :pdf
+        _JasperPrint                 = Rjb::import('net.sf.jasperreports.engine.JasperPrint')
+        _JasperExportManager         = Rjb::import('net.sf.jasperreports.engine.JasperExportManager')
+        return _JasperExportManager._invoke('exportReportToPdfFile', 'Lnet.sf.jasperreports.engine.JasperPrint;Ljava.lang.String;', prepare(datasource), Rjb::import('java.lang.String').new(path.to_s))
+      elsif Beardley.exporters[format]
+        exporter = Beardley.with_warnings { Rjb::import(Beardley.exporters[format]) }.new
+        _JRExporterParameter = Rjb::import('net.sf.jasperreports.engine.JRExporterParameter')
+        exporter.setParameter(_JRExporterParameter.JASPER_PRINT, prepare(datasource))
+        exporter.setParameter(_JRExporterParameter.OUTPUT_FILE_NAME, path.to_s)
+        exporter.exportReport
+        return path
+      else
+        raise "Invalid export format: #{format.inspect}"
+      end
+    end
+
+
     # XLS and RTF are not suitable anymore
     # NOTE: JasperReports can not produce DOC files
 

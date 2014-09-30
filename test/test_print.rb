@@ -14,6 +14,11 @@ class TestPrint < Minitest::Test
     report.to_csv
     report.to_docx
     report.to_xlsx
+    
+    report.to_file(:pdf)
+    path = File.join(File.dirname(__FILE__), "..", "tmp", "test.pdf")
+    FileUtils.mkdir_p File.dirname(path)
+    report.to_file(:pdf, path: path)
   end
 
   def test_print_of_empty_report
