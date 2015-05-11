@@ -3,3 +3,4 @@
 /pkg
 /test/fixtures/*.jasper
 /tmp
+Gemfile.lock
