@@ -22,11 +22,6 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 require "beardley/version"
-# require "beardley/core"
-# require "beardley/groovy"
-# require "beardley/barcode"
-# require "beardley/batik"
-# require "beardley/xml"
 require "pathname"
 require "digest"
 require "rjb"
