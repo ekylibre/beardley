@@ -41,6 +41,11 @@ module Beardley
           f.write(report)
         end
       end
+      if locale = options.delete(:locale)
+        locale_parts = locale.split("-")[0..2]
+        _Locale = Rjb::import('java.util.Locale')
+        @parameters["REPORT_LOCALE"] = _Locale.new(*locale_parts)
+      end
       @object_file ||= @source_file.dirname.join(@source_file.basename.to_s + ".jasper")
       unless @object_file.is_a?(Pathname)
         raise ArgumentError, "An object must be given at least"
