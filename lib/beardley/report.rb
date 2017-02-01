@@ -26,7 +26,7 @@ module Beardley
   # This class permit to produce reports in PDF, ODT and DOCX using Jasper
   class Report
     attr_reader :source_file, :object_file
-    
+
     # Constructor for a report generator
     def initialize(report, options = {})
       @parameters = options.delete(:report) || {}
@@ -107,6 +107,13 @@ module Beardley
       return path
     end
 
+    def compile(xml_path, compiled_path)
+      if File.exist?(xml_path)
+        _JasperCompileManager = Rjb::import('net.sf.jasperreports.engine.JasperCompileManager')
+        _JasperCompileManager.compileReportToFile(xml_path, compiled_path)
+      end
+    end
+
 
     # XLS and RTF are not suitable anymore
     # NOTE: JasperReports can not produce DOC files
@@ -155,14 +162,14 @@ module Beardley
       Beardley.config[:report_params].each do |k,v|
         params.put(k, v)
       end
-      
+
       # Convert the ruby parameters' hash to a java HashMap, but keeps it as
       # default when they already represent a JRB entity.
       # Pay attention that, for now, all other parameters are converted to string!
       @parameters.each do |key, value|
         params.put(_JavaString.new(key.to_s), parameter_value_of(value))
       end
-      
+
       return params
     end
 
@@ -170,7 +177,7 @@ module Beardley
     def load_datasource(datasource = nil)
       jasper_params = prepare_params
 
-      # Parse and load XML as datasource 
+      # Parse and load XML as datasource
       if datasource
         _InputSource                 = Rjb::import('org.xml.sax.InputSource')
         _StringReader                = Rjb::import('java.io.StringReader')
@@ -199,7 +206,7 @@ module Beardley
         return _JasperFillManager.fillReport(@object_file.to_s, params, _JREmptyDataSource.new)
       end
     end
-    
+
 
     # Returns the value without conversion when it's converted to Java Types.
     # When isn't a Rjb class, returns a Java String of it.

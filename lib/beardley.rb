@@ -40,12 +40,12 @@ module Beardley
     ensure
       $VERBOSE = old_verbose
     end
-    
+
   end
 
   # Default report params
   self.config = {
-    report_params: {} 
+    report_params: {}
   }
   self.exporters = {
     odt: 'net.sf.jasperreports.engine.export.oasis.JROdtExporter',
@@ -54,7 +54,7 @@ module Beardley
     docx: 'net.sf.jasperreports.engine.export.ooxml.JRDocxExporter',
     xlsx: 'net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter'
   }
-  
+
   RjbLoader.before_load do |config|
     Dir[Pathname.new(__FILE__).dirname.join("..", "vendor", "java", "*.jar")].each do |path|
       config.classpath << File::PATH_SEPARATOR + File.expand_path(path)
