@@ -21,26 +21,24 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-require "beardley/version"
-require "pathname"
-require "digest"
-require "rjb"
-require "rjb-loader"
-
+require 'beardley/version'
+require 'pathname'
+require 'digest'
+require 'rjb'
+require 'rjb-loader'
 
 module Beardley
-
   class << self
     attr_accessor :config, :exporters
 
     # Changes the level of verbosity
     def with_warnings(flag = nil)
-      old_verbose, $VERBOSE = $VERBOSE, flag
+      old_verbose = $VERBOSE
+      $VERBOSE = flag
       yield
     ensure
       $VERBOSE = old_verbose
     end
-
   end
 
   # Default report params
@@ -56,19 +54,18 @@ module Beardley
   }
 
   RjbLoader.before_load do |config|
-    Dir[Pathname.new(__FILE__).dirname.join("..", "vendor", "java", "*.jar")].each do |path|
+    Dir[Pathname.new(__FILE__).dirname.join('..', 'vendor', 'java', '*.jar')].each do |path|
       config.classpath << File::PATH_SEPARATOR + File.expand_path(path)
     end
   end
 
-  RjbLoader.after_load do |config|
-    _Locale = Rjb::import('java.util.Locale')
-    Beardley.config[:report_params]["REPORT_LOCALE"]    = _Locale.new('en', 'US')
-    Beardley.config[:report_params]["XML_LOCALE"]       = _Locale.new('en', 'US')
-    Beardley.config[:report_params]["XML_DATE_PATTERN"] = "yyyy-MM-dd'T'HH:mm:ss"
-    Beardley.config[:report_params]["XML_NUMBER_PATTERN"] = '###0.00'
+  RjbLoader.after_load do |_config|
+    _Locale = Rjb.import('java.util.Locale')
+    Beardley.config[:report_params]['REPORT_LOCALE']    = _Locale.new('en', 'US')
+    Beardley.config[:report_params]['XML_LOCALE']       = _Locale.new('en', 'US')
+    Beardley.config[:report_params]['XML_DATE_PATTERN'] = "yyyy-MM-dd'T'HH:mm:ss"
+    Beardley.config[:report_params]['XML_NUMBER_PATTERN'] = '###0.00'
   end
 
   autoload :Report, 'beardley/report'
-
 end

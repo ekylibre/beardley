@@ -5,6 +5,6 @@ module Beardley
     PATCH = 0
     PRE = nil
 
-    STRING = [MAJOR, MINOR, PATCH, PRE].compact.join(".")
+    STRING = [MAJOR, MINOR, PATCH, PRE].compact.join('.')
   end
 end

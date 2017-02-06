@@ -2,7 +2,6 @@
 require 'helper'
 
 class TestPrint < Minitest::Test
-
   def test_print_of_a_xml_string
     report = Beardley::Report.new('<?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="show" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9c1f11b7-03dd-4803-9e1b-41b87b9d23c0"/>') #  language="groovy"
@@ -14,15 +13,15 @@ class TestPrint < Minitest::Test
     report.to_csv
     report.to_docx
     report.to_xlsx
-    
+
     assert report.to_file(:pdf)
-    path = File.join(File.dirname(__FILE__), "..", "tmp", "test.pdf")
+    path = File.join(File.dirname(__FILE__), '..', 'tmp', 'test.pdf')
     FileUtils.mkdir_p File.dirname(path)
     assert_equal path.to_s, report.to_file(:pdf, path: path).to_s
   end
 
   def test_print_of_empty_report
-    empty = Pathname.new(__FILE__).dirname.join("fixtures", "empty.jrxml")
+    empty = Pathname.new(__FILE__).dirname.join('fixtures', 'empty.jrxml')
     assert empty.exist?
     report = Beardley::Report.new(empty)
     assert_equal Pathname, report.source_file.class
@@ -36,7 +35,7 @@ class TestPrint < Minitest::Test
   end
 
   def test_print_of_empty_report_with_datasource
-    empty = Pathname.new(__FILE__).dirname.join("fixtures", "empty.jrxml")
+    empty = Pathname.new(__FILE__).dirname.join('fixtures', 'empty.jrxml')
     assert empty.exist?
     report = Beardley::Report.new(empty)
     assert_equal Pathname, report.source_file.class
@@ -65,6 +64,5 @@ class TestPrint < Minitest::Test
   #   report.to_xlsx
   # end
 
-  # TODO Test parameters
-
+  # TODO: Test parameters
 end
