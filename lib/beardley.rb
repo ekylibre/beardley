@@ -25,7 +25,7 @@ require 'beardley/version'
 require 'pathname'
 require 'digest'
 require 'rjb'
-require 'rjb-loader'
+require 'rjb-loader' if ENV['DISABLED_JAVA'].to_i.zero?
 
 module Beardley
   class << self
@@ -53,18 +53,20 @@ module Beardley
     xlsx: 'net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter'
   }
 
-  RjbLoader.before_load do |config|
-    Dir[Pathname.new(__FILE__).dirname.join('..', 'vendor', 'java', '*.jar')].each do |path|
-      config.classpath << File::PATH_SEPARATOR + File.expand_path(path)
+  if ENV['DISABLED_JAVA'].to_i.zero?
+    RjbLoader.before_load do |config|
+      Dir[Pathname.new(__FILE__).dirname.join('..', 'vendor', 'java', '*.jar')].each do |path|
+        config.classpath << File::PATH_SEPARATOR + File.expand_path(path)
+      end
     end
-  end
 
-  RjbLoader.after_load do |_config|
-    _Locale = Rjb.import('java.util.Locale')
-    Beardley.config[:report_params]['REPORT_LOCALE']    = _Locale.new('en', 'US')
-    Beardley.config[:report_params]['XML_LOCALE']       = _Locale.new('en', 'US')
-    Beardley.config[:report_params]['XML_DATE_PATTERN'] = "yyyy-MM-dd'T'HH:mm:ss"
-    Beardley.config[:report_params]['XML_NUMBER_PATTERN'] = '###0.00'
+    RjbLoader.after_load do |_config|
+      _Locale = Rjb.import('java.util.Locale')
+      Beardley.config[:report_params]['REPORT_LOCALE']    = _Locale.new('en', 'US')
+      Beardley.config[:report_params]['XML_LOCALE']       = _Locale.new('en', 'US')
+      Beardley.config[:report_params]['XML_DATE_PATTERN'] = "yyyy-MM-dd'T'HH:mm:ss"
+      Beardley.config[:report_params]['XML_NUMBER_PATTERN'] = '###0.00'
+    end
   end
 
   autoload :Report, 'beardley/report'
